@@ -10,13 +10,14 @@ class CookiesController extends Controller
 {
 
     /**
-     * Create a Simple Cookie.
+     * Create a Encrypted Cookie.
+     * By Default Laravel uses and works with Encrypted Cookies.
      *
      * @param       \Illuminate\Http\Request  $request
      * @return      null
      * @important   name, token, expires
      */
-    public function cCreator(Request $request)
+    public function Encrypted(Request $request)
     {
         $name = $request->name;
         $value = $request->value;
@@ -24,19 +25,19 @@ class CookiesController extends Controller
         $path = "/api/cookies/";
         $domain = "";
         $secure = false;
-        $httponly = false;
+        $httponly = true;
 
         setrawcookie($name, $value, $expires, $path, $domain, $secure, $httponly);
     }
 
     /**
-     * Create a JWT Cookie.
+     * Create a Unencrypted Cookie.
      *
      * @param       \Illuminate\Http\Request  $request
      * @return      null
      * @important   name, token, expires
      */
-    public function cJWT(Request $request)
+    public function Unencrypted(Request $request)
     {
         $name = $request->name;
         $token = $request->token;
@@ -44,7 +45,7 @@ class CookiesController extends Controller
         $path = "/api/cookies/";
         $domain = "";
         $secure = false;
-        $httponly = true;
+        $httponly = false;
 
         setrawcookie($name, $token, $expires, $path, $domain, $secure, $httponly);
 
@@ -56,7 +57,7 @@ class CookiesController extends Controller
      * @param   string $name
      * @return  \Illuminate\Http\JsonResponse
      */
-    public function cRetrieval(string $name)
+    public function Retrieve(string $name)
     {
         $value = Cookie::get($name);
         if (is_null($value)) {
@@ -71,7 +72,7 @@ class CookiesController extends Controller
      * @param   string $name
      * @return  null
      */
-    public function cRemoval(string $name)
+    public function Remove(string $name)
     {
         //set the expiration date to 12 hour ago
         $expires = time() - 43200;
@@ -89,7 +90,7 @@ class CookiesController extends Controller
      * @param   string $name
      * @return  \Illuminate\Http\JsonResponse
      */
-    public function cExists(string $name)
+    public function Check(string $name)
     {
         return Cookie::has($name) ? response()->json(['response' => 'false'], 404) : response()->json(['response' => 'true'], 200);
     }
